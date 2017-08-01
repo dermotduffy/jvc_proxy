@@ -3,18 +3,18 @@
 import argparse
 import logging
 import socket
-import SocketServer
+import socketserver
 import time
 
 RECV_SIZE = 1024
 
-JVC_GREETING = "PJ_OK"
-JVC_ACK = "PJACK"
-JVC_REQ = "PJREQ"
+JVC_GREETING = b"PJ_OK"
+JVC_ACK = b"PJACK"
+JVC_REQ = b"PJREQ"
 
 def read_n_bytes(sock, length):
   """Read exactly 'length' bytes from socket."""
-  buff = ''
+  buff = b''
   try:
     while len(buff) < length:
       data = sock.recv(min(length - len(buff), RECV_SIZE))
@@ -84,7 +84,7 @@ def create_connected_JVC_socket(host, port, timeout, retries=0, retry_wait=0):
   logging.info("Failed to connected after %i attempt(s) ..." % attempt)
   return None
 
-class JVCProxyRequestHandler(SocketServer.BaseRequestHandler):
+class JVCProxyRequestHandler(socketserver.BaseRequestHandler):
   JVC_HOST = None
   JVC_PORT = None
   TIMEOUT = None
@@ -94,7 +94,7 @@ class JVCProxyRequestHandler(SocketServer.BaseRequestHandler):
   def _proxy_sockets(self, socket_in, socket_out, debug_direction=">>"):
     """Proxy data between two sockets."""
     bytes_proxied = 0
-    debug_buffer = ''
+    debug_buffer = b''
  
     while True:
       try:
@@ -173,7 +173,7 @@ def main():
   JVCProxyRequestHandler.RETRIES = args.retries
   JVCProxyRequestHandler.RETRY_WAIT = args.retry_wait
 
-  tcp_server = SocketServer.TCPServer(  
+  tcp_server = socketserver.TCPServer(  
       (args.proxy_host, args.proxy_port),
       JVCProxyRequestHandler,
       bind_and_activate=False)

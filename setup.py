@@ -17,6 +17,7 @@ setup(
     include_package_data=True,
     platforms='any',
     install_requires=[
+        'future',
 		],
     classifiers=[
         'Intended Audience :: Developers',
