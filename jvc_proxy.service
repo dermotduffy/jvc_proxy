@@ -1,0 +1,13 @@
+[Unit]
+Description=JVC Proxy Server
+After=network.target
+
+[Service]
+# *** Replace $HOSTNAME AND $PROJECTOR with appropriate values.
+ExecStart=/usr/local/bin/jvc_proxy --proxy_host $HOSTNAME -t 1 -l DEBUG -r 3 -w 5 $PROJECTOR
+Restart=on-abort
+User=nobody
+Group=nogroup
+
+[Install]
+WantedBy=multi-user.target
